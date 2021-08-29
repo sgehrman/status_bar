@@ -34,6 +34,32 @@ static void status_bar_plugin_handle_method_call(
     g_autoptr(FlValue) result = fl_value_new_string(version);
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
   }
+  else if (strcmp(method, "showStatusBar") == 0)
+  {
+    g_autoptr(FlValue) result = fl_value_new_bool(true);
+
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
+  else if (strcmp(method, "hideStatusBar") == 0)
+  {
+    g_autoptr(FlValue) result = fl_value_new_bool(true);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
+  else if (strcmp(method, "setStatusBarText") == 0)
+  {
+    g_autoptr(FlValue) result = fl_value_new_bool(true);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
+  else if (strcmp(method, "setStatusBarIcon") == 0)
+  {
+    g_autoptr(FlValue) result = fl_value_new_bool(true);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
+  else if (strcmp(method, "isShown") == 0)
+  {
+    g_autoptr(FlValue) result = fl_value_new_bool(true);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
   else
   {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
