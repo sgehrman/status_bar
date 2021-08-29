@@ -18,6 +18,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await status_bar.platformVersion, '42');
+    expect(await StatusBar.platformVersion, '42');
   });
 }
