@@ -1,0 +1,13 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#105d70",
+        "titleBar.inactiveBackground": "#105d70",
+        "titleBar.activeBackground": "#105d70"
+    },
+    "workbench.editor.scrollToSwitchTabs": true,
+    "workbench.editor.limit.enabled": true,
+    "dart.closingLabels": false,
+    "files.associations": {
+        "functional": "cpp"
+    },
+}
