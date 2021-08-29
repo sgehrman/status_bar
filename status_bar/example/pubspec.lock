@@ -56,30 +56,38 @@ packages:
   status_bar_linux:
     dependency: transitive
     description:
-      path: "../../status_bar_linux"
-      relative: true
-    source: path
+      path: status_bar_linux
+      ref: HEAD
+      resolved-ref: "21125954339b4a613c7c276d70fa99540180b1fd"
+      url: "git://github.com/sgehrman/status_bar.git"
+    source: git
     version: "0.0.1"
   status_bar_macos:
     dependency: transitive
     description:
-      path: "../../status_bar_macos"
-      relative: true
-    source: path
+      path: status_bar_macos
+      ref: HEAD
+      resolved-ref: "21125954339b4a613c7c276d70fa99540180b1fd"
+      url: "git://github.com/sgehrman/status_bar.git"
+    source: git
     version: "0.0.1"
   status_bar_platform_interface:
     dependency: transitive
     description:
-      path: "../../status_bar_platform_interface"
-      relative: true
-    source: path
+      path: status_bar_platform_interface
+      ref: HEAD
+      resolved-ref: "21125954339b4a613c7c276d70fa99540180b1fd"
+      url: "git://github.com/sgehrman/status_bar.git"
+    source: git
     version: "0.0.1"
   status_bar_windows:
     dependency: transitive
     description:
-      path: "../../status_bar_windows"
-      relative: true
-    source: path
+      path: status_bar_windows
+      ref: HEAD
+      resolved-ref: "21125954339b4a613c7c276d70fa99540180b1fd"
+      url: "git://github.com/sgehrman/status_bar.git"
+    source: git
     version: "0.0.1"
   typed_data:
     dependency: transitive

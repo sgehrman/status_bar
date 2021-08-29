@@ -11,14 +11,32 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # status_bar_platform_interface:
+  #   path: ../status_bar_platform_interface
+  # status_bar_macos:
+  #   path: ../status_bar_macos
+  # status_bar_windows:
+  #   path: ../status_bar_windows
+  # status_bar_linux:
+  #   path: ../status_bar_linux
+
   status_bar_platform_interface:
-    path: ../status_bar_platform_interface
+    git:
+      url: git://github.com/sgehrman/status_bar.git
+      path: status_bar_platform_interface
   status_bar_macos:
-    path: ../status_bar_macos
+    git:
+      url: git://github.com/sgehrman/status_bar.git
+      path: status_bar_macos
   status_bar_windows:
-    path: ../status_bar_windows
+    git:
+      url: git://github.com/sgehrman/status_bar.git
+      path: status_bar_windows
   status_bar_linux:
-    path: ../status_bar_linux
+    git:
+      url: git://github.com/sgehrman/status_bar.git
+      path: status_bar_linux
 
 dev_dependencies:
   flutter_test:
@@ -35,12 +53,6 @@ flutter:
   # adding or updating assets for this project.
   plugin:
     platforms:
-      android:
-        default_package: status_bar_android
-      ios:
-        default_package: status_bar_ios
-      web:
-        default_package: status_bar_web
       macos:
         default_package: status_bar_macos
       windows:
