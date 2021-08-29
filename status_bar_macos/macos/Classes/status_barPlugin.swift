@@ -2,6 +2,8 @@ import Cocoa
 import FlutterMacOS
 
 public class status_barPlugin: NSObject, FlutterPlugin {
+   var statusBarItem: NSStatusItem!
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "status_bar", binaryMessenger: registrar.messenger)
     let instance = status_barPlugin()
@@ -30,7 +32,7 @@ public class status_barPlugin: NSObject, FlutterPlugin {
    private func showStatusBar(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.statusBarItem = NSStatusBar.system.statusItem(withLength: CGFloat(NSStatusItem.variableLength))
         if let button = self.statusBarItem.button {
-             statusBarItem.button?.title = ' '
+             statusBarItem.button?.title = " "
             button.target = self
             button.action = #selector(showAppWindows(_:))
         }
