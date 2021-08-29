@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.1"
+    version: "2.8.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -28,7 +28,7 @@ packages:
       name: charcode
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.3.1"
   clock:
     dependency: transitive
     description:
@@ -67,34 +67,32 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  status_bar:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.1"
-  status_bar_platform_interface:
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  js:
     dependency: transitive
     description:
-      path: "../../status_bar_platform_interface"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.3"
   matcher:
     dependency: transitive
     description:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.10"
+    version: "0.12.11"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.7.0"
   path:
     dependency: transitive
     description:
@@ -128,6 +126,62 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  status_bar:
+    dependency: "direct main"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.1"
+  status_bar_android:
+    dependency: transitive
+    description:
+      path: "../../status_bar_android"
+      relative: true
+    source: path
+    version: "0.0.1"
+  status_bar_ios:
+    dependency: transitive
+    description:
+      path: "../../status_bar_ios"
+      relative: true
+    source: path
+    version: "0.0.1"
+  status_bar_linux:
+    dependency: transitive
+    description:
+      path: "../../status_bar_linux"
+      relative: true
+    source: path
+    version: "0.0.1"
+  status_bar_macos:
+    dependency: transitive
+    description:
+      path: "../../status_bar_macos"
+      relative: true
+    source: path
+    version: "0.0.1"
+  status_bar_platform_interface:
+    dependency: transitive
+    description:
+      path: "../../status_bar_platform_interface"
+      relative: true
+    source: path
+    version: "0.0.1"
+  status_bar_web:
+    dependency: transitive
+    description:
+      path: "../../status_bar_web"
+      relative: true
+    source: path
+    version: "0.0.1"
+  status_bar_windows:
+    dependency: transitive
+    description:
+      path: "../../status_bar_windows"
+      relative: true
+    source: path
+    version: "0.0.1"
   stream_channel:
     dependency: transitive
     description:
@@ -155,7 +209,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.3"
   typed_data:
     dependency: transitive
     description:

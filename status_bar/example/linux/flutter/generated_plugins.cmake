@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  status_bar
+  status_bar_linux
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
