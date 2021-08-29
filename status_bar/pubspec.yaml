@@ -13,12 +13,6 @@ dependencies:
     sdk: flutter
   status_bar_platform_interface:
     path: ../status_bar_platform_interface
-  status_bar_android:
-    path: ../status_bar_android
-  status_bar_ios:
-    path: ../status_bar_ios
-  status_bar_web:
-    path: ../status_bar_web
   status_bar_macos:
     path: ../status_bar_macos
   status_bar_windows:

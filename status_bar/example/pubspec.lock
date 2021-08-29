@@ -67,18 +67,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_plugins:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  js:
-    dependency: transitive
-    description:
-      name: js
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.6.3"
   matcher:
     dependency: transitive
     description:
@@ -133,20 +121,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  status_bar_android:
-    dependency: transitive
-    description:
-      path: "../../status_bar_android"
-      relative: true
-    source: path
-    version: "0.0.1"
-  status_bar_ios:
-    dependency: transitive
-    description:
-      path: "../../status_bar_ios"
-      relative: true
-    source: path
-    version: "0.0.1"
   status_bar_linux:
     dependency: transitive
     description:
@@ -165,13 +139,6 @@ packages:
     dependency: transitive
     description:
       path: "../../status_bar_platform_interface"
-      relative: true
-    source: path
-    version: "0.0.1"
-  status_bar_web:
-    dependency: transitive
-    description:
-      path: "../../status_bar_web"
       relative: true
     source: path
     version: "0.0.1"
