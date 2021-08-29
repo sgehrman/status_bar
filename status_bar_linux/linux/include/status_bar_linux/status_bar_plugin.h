@@ -12,15 +12,16 @@ G_BEGIN_DECLS
 #endif
 
 typedef struct _status_barPlugin status_barPlugin;
-typedef struct {
+typedef struct
+{
   GObjectClass parent_class;
 } status_barPluginClass;
 
 FLUTTER_PLUGIN_EXPORT GType status_bar_plugin_get_type();
 
 FLUTTER_PLUGIN_EXPORT void status_bar_plugin_register_with_registrar(
-    FlPluginRegistrar* registrar);
+    FlPluginRegistrar *registrar);
 
 G_END_DECLS
 
-#endif  // FLUTTER_PLUGIN_status_bar_PLUGIN_H_
+#endif // FLUTTER_PLUGIN_status_bar_PLUGIN_H_
