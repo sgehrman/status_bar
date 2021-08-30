@@ -15,10 +15,173 @@ struct _status_barPlugin
 {
   GObject parent_instance;
 
+  FlPluginRegistrar *registrar;
+
+  FlMethodChannel *channel;
+
   SystemTray *system_tray;
 };
 
 G_DEFINE_TYPE(status_barPlugin, status_bar_plugin, g_object_get_type())
+
+// ==============================================================
+// ==============================================================
+
+// const static char kTitleKey[] = "title";
+// const static char kIconPathKey[] = "iconpath";
+// const static char kToolTipKey[] = "tooltip";
+
+const static char kIdKey[] = "id";
+const static char kTypeKey[] = "type";
+const static char kLabelKey[] = "label";
+const static char kSeparatorKey[] = "separator";
+const static char kSubMenuKey[] = "submenu";
+const static char kEnabledKey[] = "enabled";
+
+// ==============================================================
+// ==============================================================
+
+status_barPlugin *g_plugin = nullptr;
+
+static void tray_callback(GtkMenuItem *item, gpointer user_data)
+{
+  int64_t id = GPOINTER_TO_INT(user_data);
+
+  g_print("tray_callback id:%ld\n", id);
+
+  g_autoptr(FlValue) result = fl_value_new_int(id);
+  fl_method_channel_invoke_method(g_plugin->channel,
+                                  "kMenuItemSelectedCallbackMethod", result,
+                                  nullptr, nullptr, nullptr);
+}
+
+static GtkWidget *value_to_menu(status_barPlugin *self, FlValue *value);
+
+static GtkWidget *value_to_menu_item(status_barPlugin *self, FlValue *value)
+{
+  if (fl_value_get_type(value) != FL_VALUE_TYPE_MAP)
+  {
+    return nullptr;
+  }
+
+  FlValue *type_value = fl_value_lookup_string(value, kTypeKey);
+  if (type_value == nullptr ||
+      fl_value_get_type(type_value) != FL_VALUE_TYPE_STRING)
+  {
+    return nullptr;
+  }
+
+  GtkWidget *menuItem = nullptr;
+
+  const gchar *type = fl_value_get_string(type_value);
+
+  // g_print("value_to_menu_item type:%s\n", type);
+
+  if (strcmp(type, kSeparatorKey) == 0)
+  {
+    menuItem = gtk_separator_menu_item_new();
+  }
+  else if (strcmp(type, kSubMenuKey) == 0)
+  {
+    FlValue *label_value = fl_value_lookup_string(value, kLabelKey);
+    if (label_value != nullptr &&
+        fl_value_get_type(label_value) == FL_VALUE_TYPE_STRING)
+    {
+      // g_print("value_to_menu_item submenu label:%s\n",
+      //         fl_value_get_string(label_value));
+      menuItem = gtk_menu_item_new_with_label(fl_value_get_string(label_value));
+      GtkWidget *subMenu =
+          value_to_menu(self, fl_value_lookup_string(value, kSubMenuKey));
+      if (subMenu == nullptr)
+      {
+        return nullptr;
+      }
+      gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuItem), subMenu);
+    }
+  }
+  else
+  {
+    FlValue *label_value = fl_value_lookup_string(value, kLabelKey);
+    if (label_value != nullptr &&
+        fl_value_get_type(label_value) == FL_VALUE_TYPE_STRING)
+    {
+      // g_print("value_to_menu_item label:%s\n",
+      //         fl_value_get_string(label_value));
+      menuItem = gtk_menu_item_new_with_label(fl_value_get_string(label_value));
+
+      FlValue *enabled_value = fl_value_lookup_string(value, kEnabledKey);
+      if (enabled_value != nullptr &&
+          fl_value_get_type(enabled_value) == FL_VALUE_TYPE_BOOL)
+      {
+        gtk_widget_set_sensitive(
+            menuItem, fl_value_get_bool(enabled_value) ? TRUE : FALSE);
+      }
+
+      FlValue *id_value = fl_value_lookup_string(value, kIdKey);
+      if (id_value != nullptr &&
+          fl_value_get_type(id_value) == FL_VALUE_TYPE_INT)
+      {
+        g_signal_connect(G_OBJECT(menuItem), "activate",
+                         G_CALLBACK(tray_callback),
+                         GINT_TO_POINTER(fl_value_get_int(id_value)));
+      }
+    }
+  }
+
+  return menuItem;
+}
+
+static GtkWidget *value_to_menu(status_barPlugin *self, FlValue *value)
+{
+  if (fl_value_get_type(value) != FL_VALUE_TYPE_LIST)
+  {
+    return nullptr;
+  }
+
+  GtkWidget *menu = gtk_menu_new();
+
+  for (size_t i = 0; i < fl_value_get_length(value); ++i)
+  {
+    GtkWidget *menuItem =
+        value_to_menu_item(self, fl_value_get_list_value(value, i));
+    if (menuItem == nullptr)
+    {
+      return nullptr;
+    }
+
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(menuItem));
+  }
+  return GTK_WIDGET(menu);
+}
+
+static FlMethodResponse *set_context_menu(status_barPlugin *self,
+                                          FlValue *args)
+{
+  g_autoptr(FlValue) result = fl_value_new_bool(FALSE);
+  FlMethodResponse *response = nullptr;
+
+  do
+  {
+    GtkWidget *menu = value_to_menu(self, args);
+    if (menu == nullptr)
+    {
+      response = FL_METHOD_RESPONSE(fl_method_error_response_new(
+          "kBadArgumentsError", "Menu list missing or malformed", nullptr));
+      break;
+    }
+
+    self->system_tray->set_context_menu(GTK_WIDGET(menu));
+
+    result = fl_value_new_bool(TRUE);
+
+  } while (false);
+
+  if (nullptr == response)
+  {
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
+  return response;
+}
 
 static FlMethodResponse *init_system_tray(status_barPlugin *self,
                                           FlValue *args)
@@ -33,9 +196,9 @@ static FlMethodResponse *init_system_tray(status_barPlugin *self,
   //   break;
   // }
 
-  const gchar *title = "nullptr";
-  const gchar *icon_path = "/home/steve/Pictures/coup.jpeg";
-  const gchar *tool_tip = "nullptr";
+  const gchar *title = "nul d d lptr";
+  const gchar *icon_path = nullptr;
+  const gchar *tool_tip = "nu d  ddllptr";
 
   // FlValue *title_value = fl_value_lookup_string(args, kTitleKey);
   // if (title_value && fl_value_get_type(title_value) == FL_VALUE_TYPE_STRING)
@@ -60,10 +223,9 @@ static FlMethodResponse *init_system_tray(status_barPlugin *self,
   result = fl_value_new_bool(
       self->system_tray->init_system_tray(title, icon_path, tool_tip));
 
-  if (nullptr == response)
-  {
-    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
-  }
+  response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+
+  g_print("init_system_tray done?\n");
 
   return response;
 }
@@ -74,6 +236,7 @@ static void status_bar_plugin_handle_method_call(
     FlMethodCall *method_call)
 {
   g_autoptr(FlMethodResponse) response = nullptr;
+  FlValue *args = fl_method_call_get_args(method_call);
 
   const gchar *method = fl_method_call_get_name(method_call);
 
@@ -87,7 +250,6 @@ static void status_bar_plugin_handle_method_call(
   }
   else if (strcmp(method, "showStatusBar") == 0)
   {
-    FlValue *args = fl_method_call_get_args(method_call);
 
     response = init_system_tray(self, args);
   }
@@ -98,8 +260,8 @@ static void status_bar_plugin_handle_method_call(
   }
   else if (strcmp(method, "setStatusBarText") == 0)
   {
-    g_autoptr(FlValue) result = fl_value_new_bool(true);
-    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+
+    response = set_context_menu(self, args);
   }
   else if (strcmp(method, "setStatusBarIcon") == 0)
   {
@@ -136,6 +298,8 @@ static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
 {
   status_barPlugin *plugin = status_bar_PLUGIN(user_data);
   status_bar_plugin_handle_method_call(plugin, method_call);
+
+  g_plugin = plugin;
 }
 
 void status_bar_plugin_register_with_registrar(FlPluginRegistrar *registrar)
@@ -153,6 +317,9 @@ void status_bar_plugin_register_with_registrar(FlPluginRegistrar *registrar)
                                             g_object_unref);
 
   plugin->system_tray = new SystemTray();
+
+  plugin->registrar = FL_PLUGIN_REGISTRAR(g_object_ref(registrar));
+  plugin->channel = channel;
 
   g_object_unref(plugin);
 }

@@ -13,49 +13,59 @@
 
 #include <string>
 
-bool SystemTray::init_system_tray(const char* title,
-                                  const char* iconPath,
-                                  const char* toolTip) {
+bool SystemTray::init_system_tray(const char *title,
+                                  const char *iconPath,
+                                  const char *toolTip)
+{
   printf("SystemTray::init_system_tray\n");
 
-  bool ret = false;
+  if (!init_indicator_api())
+  {
+    printf("init_indicator_api failed.\n");
 
-  do {
-    if (!init_indicator_api()) {
-      break;
-    }
+    return false;
+  }
 
-    if (!create_indicator(title, iconPath, toolTip)) {
-      break;
-    }
+  if (!create_indicator(title, iconPath, toolTip))
+  {
+    printf("create_indicator failed.\n");
 
-    ret = true;
-  } while (false);
+    return false;
+  }
 
-  return ret;
+  return true;
 }
 
-bool SystemTray::set_system_tray_info(const char* title,
-                                      const char* iconPath,
-                                      const char* toolTip) {
-  // printf(
-  //     "SystemTray::set_system_tray_info title: %s, iconPath: %s, toolTip:
-  //     %s\n", title, iconPath, toolTip);
+bool SystemTray::set_system_tray_info(const char *title,
+                                      const char *iconPath,
+                                      const char *toolTip)
+{
+  printf("SystemTray::set_system_tray_info title: %s, iconPath: %s, toolTip: %s\n", title, iconPath, toolTip);
 
   bool ret = false;
 
-  do {
-    if (!_app_indicator) {
+  do
+  {
+    if (!_app_indicator)
+    {
       break;
     }
 
-    if (iconPath) {
+    if (iconPath)
+    {
       std::string path = iconPath;
-      if (!path.empty()) {
+      if (!path.empty())
+      {
+        printf("HAS icon for sytem tray\n");
+
         _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_ACTIVE);
         _app_indicator_set_icon_full(_app_indicator, iconPath, "icon");
-      } else {
-        _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_PASSIVE);
+      }
+      else
+      {
+        printf("No icon for sytem tray\n");
+
+        _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_ACTIVE);
       }
     }
 
@@ -67,76 +77,84 @@ bool SystemTray::set_system_tray_info(const char* title,
   return ret;
 }
 
-bool SystemTray::init_indicator_api() {
-  bool ret = false;
+bool SystemTray::init_indicator_api()
+{
 
-  do {
-    void* handle = dlopen("libappindicator3.so.1", RTLD_LAZY);
-    if (!handle) {
-      break;
-    }
+  void *handle = dlopen("libappindicator3.so.1", RTLD_LAZY);
+  if (!handle)
+  {
+    return false;
+  }
 
-    _app_indicator_new = reinterpret_cast<app_indicator_new_fun>(
-        dlsym(handle, "app_indicator_new"));
-    _app_indicator_set_status = reinterpret_cast<app_indicator_set_status_fun>(
-        dlsym(handle, "app_indicator_set_status"));
-    _app_indicator_set_icon_full =
-        reinterpret_cast<app_indicator_set_icon_full_func>(
-            dlsym(handle, "app_indicator_set_icon_full"));
-    _app_indicator_set_attention_icon_full =
-        reinterpret_cast<app_indicator_set_attention_icon_full_fun>(
-            dlsym(handle, "app_indicator_set_attention_icon_full"));
-    _app_indicator_set_menu = reinterpret_cast<app_indicator_set_menu_fun>(
-        dlsym(handle, "app_indicator_set_menu"));
+  _app_indicator_new = reinterpret_cast<app_indicator_new_fun>(
+      dlsym(handle, "app_indicator_new"));
 
-    if (!_app_indicator_new || !_app_indicator_set_status ||
-        !_app_indicator_set_icon_full ||
-        !_app_indicator_set_attention_icon_full || !_app_indicator_set_menu) {
-      break;
-    }
+  _app_indicator_set_status = reinterpret_cast<app_indicator_set_status_fun>(
+      dlsym(handle, "app_indicator_set_status"));
 
-    ret = true;
-  } while (false);
+  _app_indicator_set_icon_full =
+      reinterpret_cast<app_indicator_set_icon_full_func>(
+          dlsym(handle, "app_indicator_set_icon_full"));
 
-  return ret;
+  _app_indicator_set_attention_icon_full =
+      reinterpret_cast<app_indicator_set_attention_icon_full_fun>(
+          dlsym(handle, "app_indicator_set_attention_icon_full"));
+
+  _app_indicator_set_menu = reinterpret_cast<app_indicator_set_menu_fun>(
+      dlsym(handle, "app_indicator_set_menu"));
+
+  if (!_app_indicator_new || !_app_indicator_set_status ||
+      !_app_indicator_set_icon_full ||
+      !_app_indicator_set_attention_icon_full || !_app_indicator_set_menu)
+  {
+    return false;
+  }
+
+  return true;
 }
 
-bool SystemTray::create_indicator(const char* title,
-                                  const char* iconPath,
-                                  const char* toolTip) {
+bool SystemTray::create_indicator(const char *title,
+                                  const char *iconPath,
+                                  const char *toolTip)
+{
   printf("SystemTray::create_indicator title: %s, iconPath: %s, toolTip: %s\n",
          title, iconPath, toolTip);
 
-  bool ret = false;
+  _app_indicator = _app_indicator_new(
+      title, iconPath, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
 
-  do {
-    _app_indicator = _app_indicator_new(
-        title, iconPath, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
-    _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_ACTIVE);
+  if (_app_indicator)
+  {
+    g_print("_app_indicator alloecked\n");
+  }
+  else
+  {
+    g_print("_app_indicator falied alloc\n");
+  }
 
-    ret = true;
-  } while (false);
+  _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_ACTIVE);
 
-  return ret;
+  g_print("_app_indicator set status\n");
+
+  return true;
 }
 
-bool SystemTray::set_context_menu(GtkWidget* system_menu) {
+bool SystemTray::set_context_menu(GtkWidget *system_menu)
+{
   printf("SystemTray::set_context_menu system_menu:%p\n", system_menu);
 
-  bool ret = false;
+  if (!_app_indicator)
+  {
+    printf("_app_indicator null?\n");
 
-  do {
-    assert(_app_indicator);
-    if (!_app_indicator) {
-      break;
-    }
+    return false;
+  }
 
-    gtk_widget_show_all(system_menu);
-    _app_indicator_set_menu(_app_indicator, GTK_MENU(system_menu));
+  gtk_widget_show_all(system_menu);
 
-    ret = true;
-  } while (false);
-  return ret;
+  _app_indicator_set_menu(_app_indicator, GTK_MENU(system_menu));
+
+  return true;
 }
 
-#endif  // NATIVE_C
+#endif // NATIVE_C
