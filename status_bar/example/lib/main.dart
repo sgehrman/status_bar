@@ -1,21 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:status_bar/status_bar_plugin.dart';
-import 'package:status_bar_example/menu_item.dart';
 
 typedef SystemTrayEventCallback = void Function(String eventName);
-// const String _kTitleKey = "title";
 const String _kIconPathKey = "iconPath";
-// const String _kToolTipKey = "tooltip";
-const String _kIdKey = 'id';
-const String _kTypeKey = 'type';
-const String _kLabelKey = 'label';
-const String _kSubMenuKey = 'submenu';
-const String _kEnabledKey = 'enabled';
-// const String _kSystemTrayEventCallbackMethod = 'SystemTrayEventCallback';
 
 void main() {
   runApp(MyApp());
@@ -28,9 +18,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  int _nextMenuItemId = 1;
-  final Map<int, void Function()> _selectionCallbacks = {};
-  // SystemTrayEventCallback? _systemTrayEventCallback;
+  List<StatusMenuItem>? _menuItemCache;
+  StatusBarPlugin plugin = StatusBarPlugin();
 
   @override
   void initState() {
@@ -40,46 +29,29 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    StatusBarPlugin.showStatusBar(<String, dynamic>{
+    plugin.showStatusBar(<String, dynamic>{
       _kIconPathKey: '/home/steve/Pictures/baby.jpg',
     });
 
     setContextMenu();
 
     // call back for menu items
-    StatusBarPlugin.outputCallback = (methodCall) {
+    plugin.outputCallback = (methodCall) {
       if (methodCall.method == 'status_bar_menu') {
         final int menuItemId = methodCall.arguments;
 
-        final callback = _selectionCallbacks[menuItemId];
-        if (callback == null) {
-          throw Exception('Unknown menu item ID $menuItemId');
-        }
-
-        callback();
+        _performMenuAction(_menuItems(), menuItemId);
       }
-
-      //  else if (methodCall.method == _kSystemTrayEventCallbackMethod) {
-      //   if (_systemTrayEventCallback != null) {
-      //     final String eventName = methodCall.arguments;
-      //     _systemTrayEventCallback!(eventName);
-      //   }
-      // }
     };
 
     String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
     try {
       platformVersion =
-          await StatusBarPlugin.platformVersion ?? 'Unknown platform version';
+          await plugin.platformVersion ?? 'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
@@ -87,124 +59,96 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<void> setContextMenu() async {
-    try {
-      final menus = [
-        MenuItem(
-          type: MenuItemType.item,
-          label: 'Show',
-          onTap: () {
-            // _appWindow.show();
-          },
-        ),
-        MenuItem(
-          type: MenuItemType.item,
-          label: 'Hide',
-          onTap: () {
-            // _appWindow.hide();
-          },
-        ),
-        MenuItem.separator(),
-        MenuItem(
-          type: MenuItemType.submenu,
-          label: "SubMenu",
-          children: [
-            MenuItem(
-              type: MenuItemType.item,
-              label: 'SubItem1',
-              enabled: false,
-              onTap: () {
-                print("click SubItem1");
-              },
-            ),
-            MenuItem(
-              type: MenuItemType.item,
-              label: 'SubItem2',
-              onTap: () {
-                print("click SubItem2");
-              },
-            ),
-            MenuItem(
-              type: MenuItemType.item,
-              label: 'SubItem3',
-              onTap: () {
-                print("click SubItem3");
-              },
-            ),
-          ],
-        ),
-        MenuItem.separator(),
-        MenuItem(
-          type: MenuItemType.item,
-          label: 'Quit',
-          onTap: () {
-            SystemNavigator.pop();
-          },
-        ),
-      ];
-
-      final c = _channelRepresentationForMenus(menus);
-
-      StatusBarPlugin.setStatusBarMenu(c);
-    } on PlatformException catch (e) {
-      print('Platform exception setting menu: ${e.message}');
-    }
-  }
-
-  List<Map<String, dynamic>> _channelRepresentationForMenus(
-      List<MenuItem> menus) {
-    _selectionCallbacks.clear();
-    _nextMenuItemId = 1;
-
-    return menus.map(_channelRepresentationForMenuItem).toList();
-  }
-
-  Map<String, dynamic> _channelRepresentationForMenuItem(MenuItem item) {
-    final result = <String, dynamic>{};
-
-    result[_kTypeKey] = describeEnum(item.type);
-
-    if (item.type != MenuItemType.separator) {
-      result[_kEnabledKey] = item.enabled;
-      result[_kLabelKey] = item.label;
-
-      if (item.type == MenuItemType.submenu) {
-        result[_kSubMenuKey] = _channelRepresentationForMenu(item.children!);
+  void _performMenuAction(List<StatusMenuItem> items, int actionId) {
+    for (final item in items) {
+      if (item.id == actionId) {
+        item.onTap?.call();
       } else {
-        if (item.onTap != null) {
-          result[_kIdKey] = _storeMenuCallback(item.onTap!);
+        if (item.children != null && item.children!.isNotEmpty) {
+          _performMenuAction(item.children!, actionId);
         }
       }
     }
-
-    return result;
   }
 
-  /// Returns the representation of [menu] suitable for passing over the
-  /// platform channel to the native plugin.
-  List<dynamic> _channelRepresentationForMenu(List<MenuItem> menu) {
-    final menuItemRepresentations = [];
-    // Dividers are only allowed after non-divider items (see ApplicationMenu).
-    var skipNextDivider = true;
-    for (final menuItem in menu) {
-      final isDivider = menuItem.type == MenuItemType.separator;
-      if (isDivider && skipNextDivider) {
-        continue;
-      }
-      skipNextDivider = isDivider;
-      menuItemRepresentations.add(_channelRepresentationForMenuItem(menuItem));
+  List<StatusMenuItem> _menuItems() {
+    if (_menuItemCache != null) {
+      return _menuItemCache!;
     }
-    // If the last item is a divider, remove it (see ApplicationMenu).
-    if (skipNextDivider && menuItemRepresentations.isNotEmpty) {
-      menuItemRepresentations.removeLast();
-    }
-    return menuItemRepresentations;
+    int menuItemId = 1;
+
+    _menuItemCache = [
+      StatusMenuItem(
+        type: StatusMenuItemType.item,
+        id: menuItemId++,
+        label: 'Show',
+        onTap: () {
+          // _appWindow.show();
+        },
+      ),
+      StatusMenuItem(
+        type: StatusMenuItemType.item,
+        id: menuItemId++,
+        label: 'Hide',
+        onTap: () {
+          // _appWindow.hide();
+        },
+      ),
+      StatusMenuItem.separator(),
+      StatusMenuItem(
+        id: menuItemId++,
+        type: StatusMenuItemType.submenu,
+        label: "SubMenu",
+        children: [
+          StatusMenuItem(
+            id: menuItemId++,
+            type: StatusMenuItemType.item,
+            label: 'SubItem1',
+            enabled: false,
+            onTap: () {
+              print("click SubItem1");
+            },
+          ),
+          StatusMenuItem(
+            id: menuItemId++,
+            type: StatusMenuItemType.item,
+            label: 'SubItem2',
+            onTap: () {
+              print("click SubItem2");
+            },
+          ),
+          StatusMenuItem(
+            id: menuItemId++,
+            type: StatusMenuItemType.item,
+            label: 'SubItem3',
+            onTap: () {
+              print("click SubItem3");
+            },
+          ),
+        ],
+      ),
+      StatusMenuItem.separator(),
+      StatusMenuItem(
+        id: menuItemId++,
+        type: StatusMenuItemType.item,
+        label: 'Quit',
+        onTap: () {
+          SystemNavigator.pop();
+        },
+      ),
+    ];
+
+    return _menuItemCache!;
   }
 
-  int _storeMenuCallback(void Function() callback) {
-    final id = _nextMenuItemId++;
-    _selectionCallbacks[id] = callback;
-    return id;
+  Future<void> setContextMenu() async {
+    try {
+      final menus = _menuItems();
+
+      plugin.setStatusBarMenu(menus);
+    } on PlatformException catch (e) {
+      print('Platform exception setting menu: ${e.message}');
+    }
   }
 
   @override

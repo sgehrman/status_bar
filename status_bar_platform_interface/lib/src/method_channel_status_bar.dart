@@ -2,7 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 
-import '../status_bar_platform_interface.dart';
+import './status_bar_platform.dart';
+import 'status_menu_item.dart';
 
 class MethodChannelStatusBar extends StatusBarPlatform {
   MethodChannelStatusBar() {
@@ -62,10 +63,12 @@ class MethodChannelStatusBar extends StatusBarPlatform {
   }
 
   @override
-  Future<bool> setStatusBarMenu(List<Map<String, dynamic>> menuItems) async {
+  Future<bool> setStatusBarMenu(List<StatusMenuItem> menuItems) async {
+    final menuMaps = StatusMenuItem.menuItemsToMaps(menuItems);
+
     final bool result = await (Platform.isWindows
-        ? _channel.invokeMethod('setStatusBarMenu', {'menuItems': menuItems})
-        : _channel.invokeMethod('setStatusBarMenu', menuItems));
+        ? _channel.invokeMethod('setStatusBarMenu', {'menuItems': menuMaps})
+        : _channel.invokeMethod('setStatusBarMenu', menuMaps));
     return result;
   }
 }
