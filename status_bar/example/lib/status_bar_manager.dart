@@ -51,7 +51,7 @@ class StatusBarManager {
         id: menuItemId++,
         label: 'Show',
         onTap: () {
-          // _appWindow.show();
+          plugin.isShown();
         },
       ),
       StatusMenuItem(

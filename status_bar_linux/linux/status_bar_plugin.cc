@@ -17,6 +17,7 @@ struct _status_barPlugin
   FlPluginRegistrar *registrar;
   FlMethodChannel *channel;
   SystemTray *system_tray;
+  GtkWindow *window;
 };
 
 G_DEFINE_TYPE(status_barPlugin, status_bar_plugin, g_object_get_type())
@@ -222,7 +223,6 @@ static void status_bar_plugin_handle_method_call(
   }
   else if (strcmp(method, "showStatusBar") == 0)
   {
-
     response = init_system_tray(self, args);
   }
   else if (strcmp(method, "hideStatusBar") == 0)
@@ -246,6 +246,8 @@ static void status_bar_plugin_handle_method_call(
   }
   else if (strcmp(method, "isShown") == 0)
   {
+    gtk_window_present(self->window);
+
     g_autoptr(FlValue) result = fl_value_new_bool(true);
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
   }
@@ -293,6 +295,9 @@ void status_bar_plugin_register_with_registrar(FlPluginRegistrar *registrar)
                                             g_object_unref);
 
   plugin->system_tray = new SystemTray();
+
+  GtkWidget *toplevel = gtk_widget_get_toplevel((GtkWidget *)fl_plugin_registrar_get_view(registrar));
+  plugin->window = (GtkWindow *)toplevel;
 
   plugin->registrar = FL_PLUGIN_REGISTRAR(g_object_ref(registrar));
   plugin->channel = channel;
