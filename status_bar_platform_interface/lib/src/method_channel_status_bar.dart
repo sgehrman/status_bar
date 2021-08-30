@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../status_bar_platform_interface.dart';
 
-class MethodChannelStatusBar extends statusBarPlatform {
+class MethodChannelStatusBar extends StatusBarPlatform {
   static const MethodChannel _channel = const MethodChannel('status_bar');
 
   @override
@@ -14,10 +14,10 @@ class MethodChannelStatusBar extends statusBarPlatform {
   }
 
   @override
-  Future<bool> showStatusBar() async {
+  Future<bool> showStatusBar(Map<String, dynamic> info) async {
     final bool result = await (Platform.isWindows
-        ? _channel.invokeMethod('showStatusBar')
-        : _channel.invokeMethod('showStatusBar'));
+        ? _channel.invokeMethod('showStatusBar', {'info': info})
+        : _channel.invokeMethod('showStatusBar', info));
     return result;
   }
 

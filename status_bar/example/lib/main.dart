@@ -8,14 +8,13 @@ import 'package:status_bar_example/menu_item.dart';
 
 typedef SystemTrayEventCallback = void Function(String eventName);
 // const String _kTitleKey = "title";
-// const String _kIconPathKey = "iconpath";
+const String _kIconPathKey = "iconPath";
 // const String _kToolTipKey = "tooltip";
 const String _kIdKey = 'id';
 const String _kTypeKey = 'type';
 const String _kLabelKey = 'label';
 const String _kSubMenuKey = 'submenu';
 const String _kEnabledKey = 'enabled';
-// const String _kMenuItemSelectedCallbackMethod = 'MenuItemSelectedCallback';
 // const String _kSystemTrayEventCallbackMethod = 'SystemTrayEventCallback';
 
 void main() {
@@ -29,7 +28,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  // bool _updateInProgress = false;
   int _nextMenuItemId = 1;
   final Map<int, void Function()> _selectionCallbacks = {};
   // SystemTrayEventCallback? _systemTrayEventCallback;
@@ -42,7 +40,9 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    StatusBarPlugin.showStatusBar();
+    StatusBarPlugin.showStatusBar(<String, dynamic>{
+      _kIconPathKey: '/home/steve/Pictures/baby.jpg',
+    });
 
     setContextMenu();
 
@@ -68,8 +68,6 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> setContextMenu() async {
     try {
-      // _updateInProgress = true;
-
       final menus = [
         MenuItem(
           type: MenuItemType.item,
@@ -119,8 +117,6 @@ class _MyAppState extends State<MyApp> {
       final c = _channelRepresentationForMenus(menus);
 
       StatusBarPlugin.setStatusBarMenu(c);
-
-      // _updateInProgress = false;
     } on PlatformException catch (e) {
       print('Platform exception setting menu: ${e.message}');
     }
@@ -183,27 +179,21 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Future<void> _callbackHandler(MethodCall methodCall) async {
-  //   if (methodCall.method == _kMenuItemSelectedCallbackMethod) {
-  //     if (_updateInProgress) {
-  //       // Drop stale callbacks.
-  //       // Evaluate whether this works in practice, or if races are
-  //       // regular occurences that clients will need to be prepared to
-  //       // handle (in which case a more complex ID system will be needed).
-  //       print('Warning: Menu selection callback received during menu update.');
-  //       return;
-  //     }
+  //   if (methodCall.method == 'status_bar_callback') {
   //     final int menuItemId = methodCall.arguments;
   //     final callback = _selectionCallbacks[menuItemId];
   //     if (callback == null) {
   //       throw Exception('Unknown menu item ID $menuItemId');
   //     }
   //     callback();
-  //   } else if (methodCall.method == _kSystemTrayEventCallbackMethod) {
-  //     if (_systemTrayEventCallback != null) {
-  //       final String eventName = methodCall.arguments;
-  //       _systemTrayEventCallback!(eventName);
-  //     }
   //   }
+
+  //   //  else if (methodCall.method == _kSystemTrayEventCallbackMethod) {
+  //   //   if (_systemTrayEventCallback != null) {
+  //   //     final String eventName = methodCall.arguments;
+  //   //     _systemTrayEventCallback!(eventName);
+  //   //   }
+  //   // }
   // }
 
   @override

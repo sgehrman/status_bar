@@ -14,11 +14,8 @@
 struct _status_barPlugin
 {
   GObject parent_instance;
-
   FlPluginRegistrar *registrar;
-
   FlMethodChannel *channel;
-
   SystemTray *system_tray;
 };
 
@@ -28,7 +25,7 @@ G_DEFINE_TYPE(status_barPlugin, status_bar_plugin, g_object_get_type())
 // ==============================================================
 
 // const static char kTitleKey[] = "title";
-// const static char kIconPathKey[] = "iconpath";
+const static char kIconPathKey[] = "iconPath";
 // const static char kToolTipKey[] = "tooltip";
 
 const static char kIdKey[] = "id";
@@ -49,7 +46,7 @@ static void tray_callback(GtkMenuItem *item, gpointer user_data)
 
   g_autoptr(FlValue) result = fl_value_new_int(id);
   fl_method_channel_invoke_method(g_plugin->channel,
-                                  "kMenuItemSelectedCallbackMethod", result,
+                                  "status_bar_callback", result,
                                   nullptr, nullptr, nullptr);
 }
 
@@ -180,36 +177,22 @@ static FlMethodResponse *init_system_tray(status_barPlugin *self,
   g_autoptr(FlValue) result = fl_value_new_bool(FALSE);
   FlMethodResponse *response = nullptr;
 
-  // if (fl_value_get_type(args) != FL_VALUE_TYPE_MAP)
-  // {
-  //   response = FL_METHOD_RESPONSE(
-  //       fl_method_error_response_new("Bad Arguments Error", "not map", nullptr));
-  //   break;
-  // }
+  const gchar *icon_path = "";
+  const gchar *title = "---"; // crashes if blank ""
+  const gchar *tool_tip = "";
 
-  const gchar *title = "nul d d lptr";
-  const gchar *icon_path = "/home/steve/Pictures/baby.jpg";
-  const gchar *tool_tip = "nu d  ddllptr";
+  if (fl_value_get_type(args) != FL_VALUE_TYPE_MAP)
+  {
+    return FL_METHOD_RESPONSE(
+        fl_method_error_response_new("Bad Arguments Error", "no map", nullptr));
+  }
 
-  // FlValue *title_value = fl_value_lookup_string(args, kTitleKey);
-  // if (title_value && fl_value_get_type(title_value) == FL_VALUE_TYPE_STRING)
-  // {
-  //   title = fl_value_get_string(title_value);
-  // }
-
-  // FlValue *icon_path_value = fl_value_lookup_string(args, kIconPathKey);
-  // if (icon_path_value &&
-  //     fl_value_get_type(icon_path_value) == FL_VALUE_TYPE_STRING)
-  // {
-  //   icon_path = fl_value_get_string(icon_path_value);
-  // }
-
-  // FlValue *tooltip_value = fl_value_lookup_string(args, kToolTipKey);
-  // if (tooltip_value &&
-  //     fl_value_get_type(tooltip_value) == FL_VALUE_TYPE_STRING)
-  // {
-  //   tool_tip = fl_value_get_string(tooltip_value);
-  // }
+  FlValue *icon_path_value = fl_value_lookup_string(args, kIconPathKey);
+  if (icon_path_value &&
+      fl_value_get_type(icon_path_value) == FL_VALUE_TYPE_STRING)
+  {
+    icon_path = fl_value_get_string(icon_path_value);
+  }
 
   result = fl_value_new_bool(
       self->system_tray->init_system_tray(title, icon_path, tool_tip));

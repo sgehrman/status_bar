@@ -8,16 +8,16 @@ import 'src/method_channel_status_bar.dart';
 
 export 'src/method_channel_status_bar.dart';
 
-abstract class statusBarPlatform extends PlatformInterface {
-  statusBarPlatform() : super(token: _token);
+abstract class StatusBarPlatform extends PlatformInterface {
+  StatusBarPlatform() : super(token: _token);
 
   static final Object _token = Object();
 
-  static statusBarPlatform _instance = MethodChannelStatusBar();
+  static StatusBarPlatform _instance = MethodChannelStatusBar();
 
-  static statusBarPlatform get instance => _instance;
+  static StatusBarPlatform get instance => _instance;
 
-  static set instance(statusBarPlatform instance) {
+  static set instance(StatusBarPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -26,7 +26,7 @@ abstract class statusBarPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion has not been implemented.');
   }
 
-  Future<bool> showStatusBar() async {
+  Future<bool> showStatusBar(Map<String, dynamic> info) async {
     throw UnimplementedError('showStatusBar has not been implemented.');
   }
 
