@@ -17,16 +17,13 @@ bool SystemTray::init_system_tray(const char *title,
                                   const char *iconPath,
                                   const char *toolTip)
 {
-
   if (!init_indicator_api())
   {
-
     return false;
   }
 
   if (!create_indicator(title, iconPath, toolTip))
   {
-
     return false;
   }
 
@@ -37,7 +34,6 @@ bool SystemTray::set_system_tray_info(const char *title,
                                       const char *iconPath,
                                       const char *toolTip)
 {
-
   bool ret = false;
 
   do
@@ -73,11 +69,14 @@ bool SystemTray::set_system_tray_info(const char *title,
 
 bool SystemTray::init_indicator_api()
 {
-
   void *handle = dlopen("libappindicator3.so.1", RTLD_LAZY);
   if (!handle)
   {
-    return false;
+    handle = dlopen("libappindicator3.so", RTLD_LAZY);
+    if (!handle)
+    {
+      return false;
+    }
   }
 
   _app_indicator_new = reinterpret_cast<app_indicator_new_fun>(
@@ -111,7 +110,6 @@ bool SystemTray::create_indicator(const char *title,
                                   const char *iconPath,
                                   const char *toolTip)
 {
-
   _app_indicator = _app_indicator_new(
       title, iconPath, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
 
@@ -126,10 +124,8 @@ bool SystemTray::create_indicator(const char *title,
 
 bool SystemTray::set_context_menu(GtkWidget *system_menu)
 {
-
   if (!_app_indicator)
   {
-
     return false;
   }
 
