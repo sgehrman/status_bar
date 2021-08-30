@@ -46,7 +46,7 @@ static void tray_callback(GtkMenuItem *item, gpointer user_data)
 
   g_autoptr(FlValue) result = fl_value_new_int(id);
   fl_method_channel_invoke_method(g_plugin->channel,
-                                  "status_bar_callback", result,
+                                  "status_bar_menu", result,
                                   nullptr, nullptr, nullptr);
 }
 

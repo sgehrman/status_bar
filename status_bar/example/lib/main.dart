@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
 
     // call back for menu items
     StatusBarPlugin.outputCallback = (methodCall) {
-      if (methodCall.method == 'status_bar_callback') {
+      if (methodCall.method == 'status_bar_menu') {
         final int menuItemId = methodCall.arguments;
 
         final callback = _selectionCallbacks[menuItemId];
