@@ -45,4 +45,8 @@ abstract class statusBarPlatform extends PlatformInterface {
   Future<bool> isShown() async {
     throw UnimplementedError('isShown has not been implemented.');
   }
+
+  Future<bool> setStatusBarMenu(List<Map<String, dynamic>> menuItems) async {
+    throw UnimplementedError('setStatusBarMenu has not been implemented.');
+  }
 }

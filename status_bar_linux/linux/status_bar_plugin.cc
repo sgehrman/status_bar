@@ -47,8 +47,6 @@ static void tray_callback(GtkMenuItem *item, gpointer user_data)
 {
   int64_t id = GPOINTER_TO_INT(user_data);
 
-  g_print("tray_callback id:%ld\n", id);
-
   g_autoptr(FlValue) result = fl_value_new_int(id);
   fl_method_channel_invoke_method(g_plugin->channel,
                                   "kMenuItemSelectedCallbackMethod", result,
@@ -75,55 +73,48 @@ static GtkWidget *value_to_menu_item(status_barPlugin *self, FlValue *value)
 
   const gchar *type = fl_value_get_string(type_value);
 
-  // g_print("value_to_menu_item type:%s\n", type);
-
   if (strcmp(type, kSeparatorKey) == 0)
   {
     menuItem = gtk_separator_menu_item_new();
   }
-  else if (strcmp(type, kSubMenuKey) == 0)
-  {
-    FlValue *label_value = fl_value_lookup_string(value, kLabelKey);
-    if (label_value != nullptr &&
-        fl_value_get_type(label_value) == FL_VALUE_TYPE_STRING)
-    {
-      // g_print("value_to_menu_item submenu label:%s\n",
-      //         fl_value_get_string(label_value));
-      menuItem = gtk_menu_item_new_with_label(fl_value_get_string(label_value));
-      GtkWidget *subMenu =
-          value_to_menu(self, fl_value_lookup_string(value, kSubMenuKey));
-      if (subMenu == nullptr)
-      {
-        return nullptr;
-      }
-      gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuItem), subMenu);
-    }
-  }
   else
   {
     FlValue *label_value = fl_value_lookup_string(value, kLabelKey);
+
     if (label_value != nullptr &&
         fl_value_get_type(label_value) == FL_VALUE_TYPE_STRING)
     {
-      // g_print("value_to_menu_item label:%s\n",
-      //         fl_value_get_string(label_value));
-      menuItem = gtk_menu_item_new_with_label(fl_value_get_string(label_value));
-
-      FlValue *enabled_value = fl_value_lookup_string(value, kEnabledKey);
-      if (enabled_value != nullptr &&
-          fl_value_get_type(enabled_value) == FL_VALUE_TYPE_BOOL)
+      if (strcmp(type, kSubMenuKey) == 0)
       {
-        gtk_widget_set_sensitive(
-            menuItem, fl_value_get_bool(enabled_value) ? TRUE : FALSE);
+        menuItem = gtk_menu_item_new_with_label(fl_value_get_string(label_value));
+        GtkWidget *subMenu =
+            value_to_menu(self, fl_value_lookup_string(value, kSubMenuKey));
+        if (subMenu == nullptr)
+        {
+          return nullptr;
+        }
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuItem), subMenu);
       }
-
-      FlValue *id_value = fl_value_lookup_string(value, kIdKey);
-      if (id_value != nullptr &&
-          fl_value_get_type(id_value) == FL_VALUE_TYPE_INT)
+      else
       {
-        g_signal_connect(G_OBJECT(menuItem), "activate",
-                         G_CALLBACK(tray_callback),
-                         GINT_TO_POINTER(fl_value_get_int(id_value)));
+        menuItem = gtk_menu_item_new_with_label(fl_value_get_string(label_value));
+
+        FlValue *enabled_value = fl_value_lookup_string(value, kEnabledKey);
+        if (enabled_value != nullptr &&
+            fl_value_get_type(enabled_value) == FL_VALUE_TYPE_BOOL)
+        {
+          gtk_widget_set_sensitive(
+              menuItem, fl_value_get_bool(enabled_value) ? TRUE : FALSE);
+        }
+
+        FlValue *id_value = fl_value_lookup_string(value, kIdKey);
+        if (id_value != nullptr &&
+            fl_value_get_type(id_value) == FL_VALUE_TYPE_INT)
+        {
+          g_signal_connect(G_OBJECT(menuItem), "activate",
+                           G_CALLBACK(tray_callback),
+                           GINT_TO_POINTER(fl_value_get_int(id_value)));
+        }
       }
     }
   }
@@ -197,7 +188,7 @@ static FlMethodResponse *init_system_tray(status_barPlugin *self,
   // }
 
   const gchar *title = "nul d d lptr";
-  const gchar *icon_path = nullptr;
+  const gchar *icon_path = "/home/steve/Pictures/baby.jpg";
   const gchar *tool_tip = "nu d  ddllptr";
 
   // FlValue *title_value = fl_value_lookup_string(args, kTitleKey);
@@ -224,8 +215,6 @@ static FlMethodResponse *init_system_tray(status_barPlugin *self,
       self->system_tray->init_system_tray(title, icon_path, tool_tip));
 
   response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
-
-  g_print("init_system_tray done?\n");
 
   return response;
 }
@@ -260,13 +249,17 @@ static void status_bar_plugin_handle_method_call(
   }
   else if (strcmp(method, "setStatusBarText") == 0)
   {
-
-    response = set_context_menu(self, args);
+    g_autoptr(FlValue) result = fl_value_new_bool(true);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
   }
   else if (strcmp(method, "setStatusBarIcon") == 0)
   {
     g_autoptr(FlValue) result = fl_value_new_bool(true);
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
+  else if (strcmp(method, "setStatusBarMenu") == 0)
+  {
+    response = set_context_menu(self, args);
   }
   else if (strcmp(method, "isShown") == 0)
   {

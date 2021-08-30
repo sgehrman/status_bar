@@ -17,18 +17,15 @@ bool SystemTray::init_system_tray(const char *title,
                                   const char *iconPath,
                                   const char *toolTip)
 {
-  printf("SystemTray::init_system_tray\n");
 
   if (!init_indicator_api())
   {
-    printf("init_indicator_api failed.\n");
 
     return false;
   }
 
   if (!create_indicator(title, iconPath, toolTip))
   {
-    printf("create_indicator failed.\n");
 
     return false;
   }
@@ -40,7 +37,6 @@ bool SystemTray::set_system_tray_info(const char *title,
                                       const char *iconPath,
                                       const char *toolTip)
 {
-  printf("SystemTray::set_system_tray_info title: %s, iconPath: %s, toolTip: %s\n", title, iconPath, toolTip);
 
   bool ret = false;
 
@@ -56,14 +52,12 @@ bool SystemTray::set_system_tray_info(const char *title,
       std::string path = iconPath;
       if (!path.empty())
       {
-        printf("HAS icon for sytem tray\n");
 
         _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_ACTIVE);
         _app_indicator_set_icon_full(_app_indicator, iconPath, "icon");
       }
       else
       {
-        printf("No icon for sytem tray\n");
 
         _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_ACTIVE);
       }
@@ -117,35 +111,24 @@ bool SystemTray::create_indicator(const char *title,
                                   const char *iconPath,
                                   const char *toolTip)
 {
-  printf("SystemTray::create_indicator title: %s, iconPath: %s, toolTip: %s\n",
-         title, iconPath, toolTip);
 
   _app_indicator = _app_indicator_new(
       title, iconPath, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
 
   if (_app_indicator)
   {
-    g_print("_app_indicator alloecked\n");
-  }
-  else
-  {
-    g_print("_app_indicator falied alloc\n");
+    _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_ACTIVE);
+    return true;
   }
 
-  _app_indicator_set_status(_app_indicator, APP_INDICATOR_STATUS_ACTIVE);
-
-  g_print("_app_indicator set status\n");
-
-  return true;
+  return false;
 }
 
 bool SystemTray::set_context_menu(GtkWidget *system_menu)
 {
-  printf("SystemTray::set_context_menu system_menu:%p\n", system_menu);
 
   if (!_app_indicator)
   {
-    printf("_app_indicator null?\n");
 
     return false;
   }

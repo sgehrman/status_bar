@@ -48,4 +48,12 @@ class MethodChannelStatusBar extends statusBarPlatform {
     final bool result = await _channel.invokeMethod('isShown');
     return result;
   }
+
+  @override
+  Future<bool> setStatusBarMenu(List<Map<String, dynamic>> menuItems) async {
+    final bool result = await (Platform.isWindows
+        ? _channel.invokeMethod('setStatusBarMenu', {'menuItems': menuItems})
+        : _channel.invokeMethod('setStatusBarMenu', menuItems));
+    return result;
+  }
 }
