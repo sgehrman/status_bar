@@ -246,8 +246,7 @@ static void status_bar_plugin_handle_method_call(
   }
   else if (strcmp(method, "isShown") == 0)
   {
-
-    GApplication *app = (GApplication *)gtk_window_get_application(self->window);
+    // GApplication *app = (GApplication *)gtk_window_get_application(self->window);
 
     // doesn't work, doesn't bring up app to front, but will trigger a second window to come up
     // g_application_activate(app);
@@ -255,20 +254,20 @@ static void status_bar_plugin_handle_method_call(
     // show's window if hidden
     gtk_window_present(self->window);
 
-    GNotification *notification;
-    // GFile *file;
-    // GIcon *icon;
-    notification = g_notification_new("one");
-    g_notification_set_body(notification, "Dashboard Ready!");
-    // file = g_file_new_for_path (ICON_PATH);
-    // icon = g_file_icon_new (file);
-    // g_notification_set_icon (notification, G_ICON (icon));
-    g_application_send_notification(app, NULL, notification);
-    // g_object_unref (icon);
-    // g_object_unref (file);
-    // g_object_unref(notification);
-    // g_object_unref (app);
-    // g_print ("yes\n");
+    // GNotification *notification;
+    // // GFile *file;
+    // // GIcon *icon;
+    // notification = g_notification_new("one");
+    // g_notification_set_body(notification, "Dashboard Ready!");
+    // // file = g_file_new_for_path (ICON_PATH);
+    // // icon = g_file_icon_new (file);
+    // // g_notification_set_icon (notification, G_ICON (icon));
+    // g_application_send_notification(app, NULL, notification);
+    // // g_object_unref (icon);
+    // // g_object_unref (file);
+    // // g_object_unref(notification);
+    // // g_object_unref (app);
+    // // g_print ("yes\n");
 
     g_autoptr(FlValue) result = fl_value_new_bool(true);
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
