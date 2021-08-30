@@ -18,6 +18,18 @@ G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 // Implements GApplication::activate.
 static void my_application_activate(GApplication *application)
 {
+  // ---------------------
+  // SNG bail out if we already have a window
+  // GList *list = gtk_application_get_windows((GtkApplication *)application);
+
+  // if (g_list_length(list) > 0)
+  // {
+  //   gtk_window_present((GtkWindow *)g_list_nth_data(list, 0));
+
+  //   return;
+  // }
+  // ---------------------
+
   MyApplication *self = MY_APPLICATION(application);
   GtkWindow *window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
