@@ -24,6 +24,8 @@ public class status_barPlugin: NSObject, FlutterPlugin {
         setStatusBarIcon(call, result: result)
     case "isShown":
         result(self.statusBarItem != nil)
+    case "setStatusBarMenu":
+        result(true)
     default:
       result(FlutterMethodNotImplemented)
     }
