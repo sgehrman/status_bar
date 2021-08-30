@@ -5,7 +5,19 @@ import 'package:flutter/services.dart';
 import '../status_bar_platform_interface.dart';
 
 class MethodChannelStatusBar extends StatusBarPlatform {
-  static const MethodChannel _channel = const MethodChannel('status_bar');
+  MethodChannelStatusBar() {
+    _channel.setMethodCallHandler((methodCall) async {
+      _callback?.call(methodCall);
+    });
+  }
+
+  final MethodChannel _channel = const MethodChannel('status_bar');
+  void Function(MethodCall)? _callback;
+
+  @override
+  set outputCallback(void Function(MethodCall) callback) {
+    _callback = callback;
+  }
 
   @override
   Future<String?> get platformVersion async {

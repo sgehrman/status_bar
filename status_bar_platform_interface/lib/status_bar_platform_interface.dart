@@ -1,25 +1,24 @@
 library status_bar_platform_interface;
 
 import 'dart:typed_data';
-
+import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
 import 'src/method_channel_status_bar.dart';
-
-export 'src/method_channel_status_bar.dart';
 
 abstract class StatusBarPlatform extends PlatformInterface {
   StatusBarPlatform() : super(token: _token);
 
   static final Object _token = Object();
-
-  static StatusBarPlatform _instance = MethodChannelStatusBar();
-
-  static StatusBarPlatform get instance => _instance;
+  static StatusBarPlatform _methodChannel = MethodChannelStatusBar();
+  static StatusBarPlatform get methodChannel => _methodChannel;
 
   static set instance(StatusBarPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
-    _instance = instance;
+    _methodChannel = instance;
+  }
+
+  set outputCallback(void Function(MethodCall) callback) {
+    throw UnimplementedError('outputCallback has not been implemented.');
   }
 
   Future<String?> get platformVersion async {

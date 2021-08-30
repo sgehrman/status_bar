@@ -46,6 +46,27 @@ class _MyAppState extends State<MyApp> {
 
     setContextMenu();
 
+    // call back for menu items
+    StatusBarPlugin.outputCallback = (methodCall) {
+      if (methodCall.method == 'status_bar_callback') {
+        final int menuItemId = methodCall.arguments;
+
+        final callback = _selectionCallbacks[menuItemId];
+        if (callback == null) {
+          throw Exception('Unknown menu item ID $menuItemId');
+        }
+
+        callback();
+      }
+
+      //  else if (methodCall.method == _kSystemTrayEventCallbackMethod) {
+      //   if (_systemTrayEventCallback != null) {
+      //     final String eventName = methodCall.arguments;
+      //     _systemTrayEventCallback!(eventName);
+      //   }
+      // }
+    };
+
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
@@ -112,6 +133,14 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
+        MenuItem.separator(),
+        MenuItem(
+          type: MenuItemType.item,
+          label: 'Quit',
+          onTap: () {
+            SystemNavigator.pop();
+          },
+        ),
       ];
 
       final c = _channelRepresentationForMenus(menus);
@@ -177,24 +206,6 @@ class _MyAppState extends State<MyApp> {
     _selectionCallbacks[id] = callback;
     return id;
   }
-
-  // Future<void> _callbackHandler(MethodCall methodCall) async {
-  //   if (methodCall.method == 'status_bar_callback') {
-  //     final int menuItemId = methodCall.arguments;
-  //     final callback = _selectionCallbacks[menuItemId];
-  //     if (callback == null) {
-  //       throw Exception('Unknown menu item ID $menuItemId');
-  //     }
-  //     callback();
-  //   }
-
-  //   //  else if (methodCall.method == _kSystemTrayEventCallbackMethod) {
-  //   //   if (_systemTrayEventCallback != null) {
-  //   //     final String eventName = methodCall.arguments;
-  //   //     _systemTrayEventCallback!(eventName);
-  //   //   }
-  //   // }
-  // }
 
   @override
   Widget build(BuildContext context) {
