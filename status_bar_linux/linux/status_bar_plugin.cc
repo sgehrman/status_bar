@@ -244,7 +244,12 @@ static void status_bar_plugin_handle_method_call(
   {
     response = set_context_menu(self, args);
   }
-  else if (strcmp(method, "isShown") == 0)
+  else if (strcmp(method, "hideWindow") == 0) 
+  {
+    g_autoptr(FlValue) result = fl_value_new_bool(true);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
+  else if (strcmp(method, "showWindow") == 0)
   {
     // GApplication *app = (GApplication *)gtk_window_get_application(self->window);
 

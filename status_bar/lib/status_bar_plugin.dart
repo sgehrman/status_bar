@@ -35,7 +35,11 @@ class StatusBarPlugin extends StatusBarPlatform {
     return StatusBarPlatform.methodChannel.setStatusBarMenu(menuItems);
   }
 
-  Future<bool> isShown() async {
-    return StatusBarPlatform.methodChannel.isShown();
+  Future<bool> showWindow() async {
+    return StatusBarPlatform.methodChannel.showWindow();
+  }
+
+  Future<bool> hideWindow() async {
+    return StatusBarPlatform.methodChannel.hideWindow();
   }
 }

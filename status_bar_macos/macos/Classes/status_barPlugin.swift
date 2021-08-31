@@ -33,8 +33,11 @@ public class status_barPlugin: NSObject, NSPopoverDelegate, FlutterPlugin {
             setStatusBarText(call, result: result)
         case "setStatusBarIcon":
             setStatusBarIcon(call, result: result)
-        case "isShown":
-            result(self.statusBarItem != nil)
+        case "showWindow":
+            showAppWindows()
+            result(true)
+        case "hideWindow":
+             result(true)
         case "setStatusBarMenu":
             setStatusBarMenu(call, result: result)
         default:
@@ -81,16 +84,9 @@ public class status_barPlugin: NSObject, NSPopoverDelegate, FlutterPlugin {
                     menu.addItem(NSMenuItem.separator())
 
                 } else {
-                    var k: String = ""
-
-                    if (value["label"] as! String == "Quit")
-                    {
-                        k = "q"
-                    }
-
                     let menuItem = NSMenuItem(title: value["label"] as! String,
                                               action: #selector(menuItemAction),
-                                              keyEquivalent: k)
+                                              keyEquivalent: value["key"] as! String? ?? "")
 
                     menuItem.tag = value["id"] as! Int
                     // menuItem.isEnabled = true

@@ -57,8 +57,14 @@ class MethodChannelStatusBar extends StatusBarPlatform {
   }
 
   @override
-  Future<bool> isShown() async {
-    final bool result = await _channel.invokeMethod('isShown');
+  Future<bool> showWindow() async {
+    final bool result = await _channel.invokeMethod('showWindow');
+    return result;
+  }
+
+  @override
+  Future<bool> hideWindow() async {
+    final bool result = await _channel.invokeMethod('hideWindow');
     return result;
   }
 

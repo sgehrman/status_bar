@@ -14,6 +14,7 @@ class StatusMenuItem {
     this.enabled = true,
     this.onTap,
     this.children,
+    this.key = '',
   });
 
   factory StatusMenuItem.separator() {
@@ -26,6 +27,7 @@ class StatusMenuItem {
 
   final StatusMenuItemType type;
   final String label;
+  final String key;
   final int id;
   final bool enabled;
   final List<StatusMenuItem>? children;
@@ -65,6 +67,7 @@ class StatusMenuItem {
       result['enabled'] = item.enabled;
       result['label'] = item.label;
       result['id'] = item.id;
+      result['key'] = item.key;
 
       if (item.type == StatusMenuItemType.submenu) {
         result['submenu'] = menuItemsToMaps(item.children!);

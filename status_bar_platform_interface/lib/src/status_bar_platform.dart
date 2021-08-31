@@ -23,6 +23,7 @@ abstract class StatusBarPlatform extends PlatformInterface {
   Future<bool> hideStatusBar();
   Future<bool> setStatusBarText(String text);
   Future<bool> setStatusBarIcon(Uint8List iconData);
-  Future<bool> isShown();
+  Future<bool> showWindow();
+  Future<bool> hideWindow();
   Future<bool> setStatusBarMenu(List<StatusMenuItem> menuItems);
 }
