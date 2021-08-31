@@ -1,16 +1,25 @@
 import Cocoa
 import FlutterMacOS
 
+
 public class status_barPlugin: NSObject, NSPopoverDelegate, FlutterPlugin {
     private var statusBarItem: NSStatusItem!
     private var menu: NSMenu = NSMenu()
-
+    private var channel: FlutterMethodChannel
+    var registrar: FlutterPluginRegistrar
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "status_bar", binaryMessenger: registrar.messenger)
-        let instance = status_barPlugin()
+        let instance = status_barPlugin(registrar, channel)
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
+
+
+    init(_ registrar: FlutterPluginRegistrar, _ channel: FlutterMethodChannel) {
+        self.channel = channel
+        self.registrar = registrar
+    }
+
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
@@ -65,9 +74,31 @@ public class status_barPlugin: NSObject, NSPopoverDelegate, FlutterPlugin {
 
     private func setStatusBarMenu(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if self.statusBarItem != nil {
- 
-            //  menu.addItem(NSMenuItem.separator())
-            menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+            let items = call.arguments as! Array<Dictionary<String, Any>>
+
+            items.forEach { value in
+                if (value["type"] as! String == "separator") {
+                    menu.addItem(NSMenuItem.separator())
+
+                } else {
+                    var k: String = ""
+
+                    if (value["label"] as! String == "Quit")
+                    {
+                        k = "q"
+                    }
+
+                    let menuItem = NSMenuItem(title: value["label"] as! String,
+                                              action: #selector(menuItemAction),
+                                              keyEquivalent: k)
+
+                    menuItem.tag = value["id"] as! Int
+                    // menuItem.isEnabled = true
+                    menuItem.target = self
+
+                    menu.addItem(menuItem)
+                }
+            }
 
             result(true)
         } else {
@@ -114,15 +145,19 @@ public class status_barPlugin: NSObject, NSPopoverDelegate, FlutterPlugin {
         }
     }
 
+    @objc private func menuItemAction(_ menuItem: NSMenuItem) {
+        channel.invokeMethod("status_bar_menu", arguments: menuItem.tag, result: nil)
+    }
+
     @objc private func statusButtonAction(_ button: NSStatusBarButton) {
         guard let event = NSApp.currentEvent else { return }
 
         switch event.type {
         case .rightMouseUp:
             menu.popUp(
-                positioning: nil, 
-            at: NSPoint(x: 0,y: button.frame.size.height + 10), 
-            in: button)
+                positioning: nil,
+                at: NSPoint(x: 0, y: button.frame.size.height + 10),
+                in: button)
         case .leftMouseUp:
             showAppWindows()
         default:
