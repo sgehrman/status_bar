@@ -7,7 +7,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   collection:
     dependency: transitive
     description:
@@ -59,7 +59,7 @@ packages:
       path: status_bar_linux
       ref: HEAD
       resolved-ref: "699ab482025970294396b3d8c0560d4ab37e7a58"
-      url: "git://github.com/sgehrman/status_bar.git"
+      url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
   status_bar_macos:
@@ -68,7 +68,7 @@ packages:
       path: status_bar_macos
       ref: HEAD
       resolved-ref: "699ab482025970294396b3d8c0560d4ab37e7a58"
-      url: "git://github.com/sgehrman/status_bar.git"
+      url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
   status_bar_platform_interface:
@@ -77,7 +77,7 @@ packages:
       path: status_bar_platform_interface
       ref: HEAD
       resolved-ref: "699ab482025970294396b3d8c0560d4ab37e7a58"
-      url: "git://github.com/sgehrman/status_bar.git"
+      url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
   status_bar_windows:
@@ -86,7 +86,7 @@ packages:
       path: status_bar_windows
       ref: HEAD
       resolved-ref: "699ab482025970294396b3d8c0560d4ab37e7a58"
-      url: "git://github.com/sgehrman/status_bar.git"
+      url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
   typed_data:

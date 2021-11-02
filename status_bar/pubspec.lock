@@ -21,7 +21,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   charcode:
     dependency: transitive
     description:
@@ -87,7 +87,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -112,8 +112,8 @@ packages:
     description:
       path: status_bar_linux
       ref: HEAD
-      resolved-ref: "699ab482025970294396b3d8c0560d4ab37e7a58"
-      url: "git://github.com/sgehrman/status_bar.git"
+      resolved-ref: fd8e64c684f9c4fe033352f19ad4a2c67d32d9b9
+      url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
   status_bar_macos:
@@ -121,8 +121,8 @@ packages:
     description:
       path: status_bar_macos
       ref: HEAD
-      resolved-ref: "699ab482025970294396b3d8c0560d4ab37e7a58"
-      url: "git://github.com/sgehrman/status_bar.git"
+      resolved-ref: fd8e64c684f9c4fe033352f19ad4a2c67d32d9b9
+      url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
   status_bar_platform_interface:
@@ -130,8 +130,8 @@ packages:
     description:
       path: status_bar_platform_interface
       ref: HEAD
-      resolved-ref: "699ab482025970294396b3d8c0560d4ab37e7a58"
-      url: "git://github.com/sgehrman/status_bar.git"
+      resolved-ref: fd8e64c684f9c4fe033352f19ad4a2c67d32d9b9
+      url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
   status_bar_windows:
@@ -139,8 +139,8 @@ packages:
     description:
       path: status_bar_windows
       ref: HEAD
-      resolved-ref: "699ab482025970294396b3d8c0560d4ab37e7a58"
-      url: "git://github.com/sgehrman/status_bar.git"
+      resolved-ref: fd8e64c684f9c4fe033352f19ad4a2c67d32d9b9
+      url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
   stream_channel:
