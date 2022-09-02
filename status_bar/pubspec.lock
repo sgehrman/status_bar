@@ -112,7 +112,7 @@ packages:
     description:
       path: status_bar_linux
       ref: HEAD
-      resolved-ref: "3d027e22a9f779b7ac92ebbb0ed4117af2ed49a4"
+      resolved-ref: "3da911f250b2966469873e3f955702e2a92df4da"
       url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
@@ -121,7 +121,7 @@ packages:
     description:
       path: status_bar_macos
       ref: HEAD
-      resolved-ref: "3d027e22a9f779b7ac92ebbb0ed4117af2ed49a4"
+      resolved-ref: "3da911f250b2966469873e3f955702e2a92df4da"
       url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
@@ -130,7 +130,7 @@ packages:
     description:
       path: status_bar_platform_interface
       ref: HEAD
-      resolved-ref: "3d027e22a9f779b7ac92ebbb0ed4117af2ed49a4"
+      resolved-ref: "3da911f250b2966469873e3f955702e2a92df4da"
       url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
@@ -139,7 +139,7 @@ packages:
     description:
       path: status_bar_windows
       ref: HEAD
-      resolved-ref: "3d027e22a9f779b7ac92ebbb0ed4117af2ed49a4"
+      resolved-ref: "3da911f250b2966469873e3f955702e2a92df4da"
       url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
