@@ -7,7 +7,7 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 set(PLUGIN_NAME "${PROJECT_NAME}_plugin")
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules (APPINDICATOR REQUIRED IMPORTED_TARGET ayatana-appindicator3-1)
+pkg_check_modules (APPINDICATOR REQUIRED IMPORTED_TARGET appindicator3-0.1)
 
 add_library(${PLUGIN_NAME} SHARED
   "status_bar_plugin.cc"
