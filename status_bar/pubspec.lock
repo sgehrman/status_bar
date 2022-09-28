@@ -87,7 +87,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "2.1.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -112,7 +112,7 @@ packages:
     description:
       path: status_bar_linux
       ref: HEAD
-      resolved-ref: b4c16cb43d3d7e133238b490f2789d812a424dda
+      resolved-ref: "266ce2e4b17850d254833e7f992b15b143034963"
       url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
@@ -121,7 +121,7 @@ packages:
     description:
       path: status_bar_macos
       ref: HEAD
-      resolved-ref: b4c16cb43d3d7e133238b490f2789d812a424dda
+      resolved-ref: "266ce2e4b17850d254833e7f992b15b143034963"
       url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
@@ -130,7 +130,7 @@ packages:
     description:
       path: status_bar_platform_interface
       ref: HEAD
-      resolved-ref: b4c16cb43d3d7e133238b490f2789d812a424dda
+      resolved-ref: "266ce2e4b17850d254833e7f992b15b143034963"
       url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
@@ -139,7 +139,7 @@ packages:
     description:
       path: status_bar_windows
       ref: HEAD
-      resolved-ref: b4c16cb43d3d7e133238b490f2789d812a424dda
+      resolved-ref: "266ce2e4b17850d254833e7f992b15b143034963"
       url: "https://github.com//sgehrman/status_bar.git"
     source: git
     version: "0.0.1"
