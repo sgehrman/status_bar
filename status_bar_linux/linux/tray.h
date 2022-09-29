@@ -2,7 +2,7 @@
 #define __Tray_H__
 
 #include <gtk/gtk.h>
-#include <libappindicator/app-indicator.h>
+#include <libayatana-appindicator/app-indicator.h>
 
 typedef AppIndicator *(*app_indicator_new_fun)(const gchar *,
                                                const gchar *,
